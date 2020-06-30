@@ -8,21 +8,17 @@ using Telegram.Bot.Types;
 
 namespace TelegaNewBot.Models.Commands.BaseCommands
 {
-    public class HelloCommand : CommandDefault
+    public class TestCommand : CommandDefault
     {
-        public override string Name => @"/hello";
-
+        public override string Name => @"/test";
         public override Task Exec(Message mes, TelegramBotClient client)
         {
-            var chatId = mes.Chat.Id;
-            var mesId = mes.MessageId;
-            return client.SendTextMessageAsync(chatId, $"Здарова бандит {mes.From.FirstName} id={mes.From.Id}");
-
+            var tagged = $"<a href=\"https://shikimori.one/system/animes/original/13541.jpg\"></a>";
+            return client.SendTextMessageAsync(mes.Chat.Id, tagged, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, disableWebPagePreview: false);
         }
-        
         public override bool Contains(Message inputMessage)
         {
-            if(inputMessage.Type == Telegram.Bot.Types.Enums.MessageType.Text)
+            if (inputMessage.Type == Telegram.Bot.Types.Enums.MessageType.Text)
             {
                 return base.Contains(inputMessage);
             }

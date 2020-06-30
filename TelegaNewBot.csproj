@@ -140,11 +140,18 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Bot.cs" />
+    <Compile Include="Models\Commands\BaseCommands\MenuCommand.cs" />
     <Compile Include="Models\Commands\BaseCommands\MultiHelloCommand.cs" />
-    <Compile Include="Models\Commands\OngoingAnimeCommand.cs" />
+    <Compile Include="Models\Commands\BaseCommands\TestCommand.cs" />
+    <Compile Include="Models\Commands\ShikimoriCommands\OngoingAnimeCommand.cs" />
     <Compile Include="Models\Commands\BaseCommands\HelloCommand.cs" />
     <Compile Include="Models\Commands\CommandDefault.cs" />
-    <Compile Include="Models\Commands\ShikimoreAuthorizationCommand.cs" />
+    <Compile Include="Models\Commands\ShikimoriCommands\OngoingPagesCommand.cs" />
+    <Compile Include="Models\Commands\ShikimoriCommands\ShikimoreAuthorizationCommand.cs" />
+    <Compile Include="Models\Keyboards\InlineKeyboardDefault.cs" />
+    <Compile Include="Models\Keyboards\KeyboardDefault.cs" />
+    <Compile Include="Models\Keyboards\ReplyKeyboards\MainMenuKeyboard.cs" />
+    <Compile Include="Models\Keyboards\InlineKeyboards\ShikimoriKeyboard.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

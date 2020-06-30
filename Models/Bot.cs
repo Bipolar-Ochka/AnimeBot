@@ -36,9 +36,11 @@ namespace TelegaNewBot.Models
             {
                 commandDefaults = new List<Commands.CommandDefault>();
                 commandDefaults.Add(new Commands.BaseCommands.HelloCommand());
-                commandDefaults.Add(new Commands.ShikimoreAuthorizationCommand());
-                commandDefaults.Add(new Commands.OngoingAnimeCommand());
                 commandDefaults.Add(new Commands.BaseCommands.MultiHelloCommand());
+                commandDefaults.Add(new Commands.ShikimoriCommands.ShikimoreAuthorizationCommand());
+                commandDefaults.Add(new Commands.ShikimoriCommands.OngoingAnimeCommand());
+                commandDefaults.Add(new Commands.BaseCommands.MenuCommand());
+                commandDefaults.Add(new Commands.BaseCommands.TestCommand());
             }
         }
     }

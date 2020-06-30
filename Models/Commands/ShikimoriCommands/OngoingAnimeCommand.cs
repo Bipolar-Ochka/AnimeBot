@@ -10,7 +10,7 @@ using ShikiHuiki.UserClass;
 using System.Text;
 using ShikiHuiki.Constants;
 
-namespace TelegaNewBot.Models.Commands
+namespace TelegaNewBot.Models.Commands.ShikimoriCommands
 {
     public class OngoingAnimeCommand : CommandDefault
     {
@@ -40,7 +40,7 @@ namespace TelegaNewBot.Models.Commands
             {
                 var list = new List<UserAnimeRate>();
                 StringBuilder str = new StringBuilder();
-                await shikiClient.GetAnime(list).ConfigureAwait(false);
+                await shikiClient.GetAnime(list);
                 if (list is null)
                 {
                     await client.SendTextMessageAsync(mes.Chat.Id, $"List is empty", replyToMessageId: mes.MessageId);

@@ -7,7 +7,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using ShikiHuiki;
 
-namespace TelegaNewBot.Models.Commands
+namespace TelegaNewBot.Models.Commands.ShikimoriCommands
 {
     public class ShikimoreAuthorizationCommand : CommandDefault
     {

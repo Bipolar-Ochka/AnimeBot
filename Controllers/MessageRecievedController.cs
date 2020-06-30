@@ -24,16 +24,24 @@ namespace TelegaNewBot.Controllers
         public async Task<OkResult> MessageGet([FromBody] Update update)
         {
             if (update == null) return Ok();
-            var commands = Bot.Commands;
-            var message = update.Message;
             var client = await Bot.LoadClient();
-            foreach(Models.Commands.CommandDefault comd in commands)
+            switch (update.Type)
             {
-                if (comd.Contains(message) && message.Date >= Bot.startTime)
-                {
-                    await comd.Exec(message, client);
+                case Telegram.Bot.Types.Enums.UpdateType.Message:
+                    var commands = Bot.Commands;
+                    var message = update.Message;
+                    foreach(Models.Commands.CommandDefault comd in commands)
+                    {
+                        if (comd.Contains(message) && message.Date >= Bot.startTime)
+                        {
+                            await comd.Exec(message, client);
+                            break;
+                        }
+                    }
                     break;
-                }
+                case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
+                    var fromButtonData = update.CallbackQuery.Data;
+                    break;
             }
             return Ok();
         }
