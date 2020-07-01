@@ -8,12 +8,18 @@ using ShikiHuiki;
 
 namespace TelegaNewBot.Models
 {
+    enum State
+    {
+        Default,
+        AuthCodeWait
+    }
     public static class Bot
     {
         private static TelegramBotClient client;
         private static List<Commands.CommandDefault> commandDefaults;
         internal static Dictionary<int, ShikimoriClient> animeAccounts = new Dictionary<int, ShikimoriClient>();
         internal static DateTime startTime;
+        internal static State BotState;
 
         public static IReadOnlyCollection<Commands.CommandDefault> Commands { get => commandDefaults.AsReadOnly(); }
 
@@ -27,6 +33,7 @@ namespace TelegaNewBot.Models
             var hook = string.Format(Settings.Url, "bot/message/update");
             await client.SetWebhookAsync(hook);
             startTime = DateTime.Now;
+            BotState = State.Default;
             return client;
         }
 

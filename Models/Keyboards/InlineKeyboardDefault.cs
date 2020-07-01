@@ -13,15 +13,19 @@ namespace TelegaNewBot.Models.Keyboards
     {
         public abstract string Name { get; }
         public abstract InlineKeyboardMarkup GetKeyboard();
-        public abstract Task Handler(string buttonData, Message mes, TelegramBotClient client);
+        public abstract Task Handler(string buttonData, Update upd, TelegramBotClient client);
         protected InlineKeyboardButton GetButton(string buttonName)
         {
             var button = new InlineKeyboardButton();
-            button.CallbackData = $"{Name}{buttonName}";
+            button.CallbackData = $"{Name}_{buttonName}";
             button.Text = buttonName;
             return button;
         }
 
+        protected string getButtonCommand(string queryData)
+        {
+            return queryData.Trim().Split('_').Last();
+        }
         public virtual bool Contains(string messageString)
         {
             return messageString.Contains(this.Name);

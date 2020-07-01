@@ -13,7 +13,8 @@ namespace TelegaNewBot.Models.Commands.BaseCommands
         public override string Name => @"/test";
         public override Task Exec(Message mes, TelegramBotClient client)
         {
-            var tagged = $"<a href=\"https://shikimori.one/system/animes/original/13541.jpg\"></a>";
+            //var tagged = $"<a href=\"https://shikimori.one/system/animes/original/13541.jpg\">-</a><a href=\"https://shikimori.one/system/animes/original/134.jpg\">.</a><b>Test</b>";
+            var tagged = @"<strong><i>Test</i></strong>";
             return client.SendTextMessageAsync(mes.Chat.Id, tagged, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, disableWebPagePreview: false);
         }
         public override bool Contains(Message inputMessage)
