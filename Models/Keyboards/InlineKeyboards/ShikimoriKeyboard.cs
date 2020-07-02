@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using TelegaNewBot.Models.Keyboards.ReplyKeyboards;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -23,10 +24,10 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
             return new InlineKeyboardMarkup(keyb);
         }
 
-        public override Task Handler(string buttonData, Update upd, TelegramBotClient client)
+        public override Task Handler(Update upd, TelegramBotClient client)
         {
             //TODO: fill switch
-            var butCommand = getButtonCommand(buttonData);
+            var butCommand = getButtonCommand(upd.CallbackQuery.Data);
             switch (butCommand)
             {
                 case "User":
@@ -35,8 +36,8 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                     return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, $"<a href=\"{CodeUrl}\">Перейдите по ссылке и отправьте в сообщении код авторизации</a>", parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
                 case "Anime":
                     break;
-                case "Return to menu":
-                    break;
+                case "Return to menu":                    
+                    return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, "main menu");
                 default:
                     break;
             }

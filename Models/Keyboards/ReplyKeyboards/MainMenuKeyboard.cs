@@ -28,10 +28,5 @@ namespace TelegaNewBot.Models.Keyboards.ReplyKeyboards
             var keys = new ReplyKeyboardMarkup(keyTable, resizeKeyboard: true, oneTimeKeyboard: true);
             return keys;
         }
-
-        public override Task Handler(string buttonData, Message mes, TelegramBotClient client)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

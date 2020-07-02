@@ -13,7 +13,7 @@ namespace TelegaNewBot.Models.Keyboards
     {
         public abstract string Name { get; }
         public abstract InlineKeyboardMarkup GetKeyboard();
-        public abstract Task Handler(string buttonData, Update upd, TelegramBotClient client);
+        public abstract Task Handler (Update upd, TelegramBotClient client);
         protected InlineKeyboardButton GetButton(string buttonName)
         {
             var button = new InlineKeyboardButton();

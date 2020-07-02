@@ -13,7 +13,6 @@ namespace TelegaNewBot.Models.Keyboards
     {
         public abstract string Name { get; }
         public abstract ReplyKeyboardMarkup GetKeyboard();
-        public abstract Task Handler(string buttonData, Message mes, TelegramBotClient client);
 
         public virtual bool Contains(string messageString)
         {

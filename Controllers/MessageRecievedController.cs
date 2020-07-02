@@ -27,16 +27,23 @@ namespace TelegaNewBot.Controllers
             var client = await Bot.LoadClient();
             switch (update.Type)
             {
-                case Telegram.Bot.Types.Enums.UpdateType.Message:
-                    var commands = Bot.Commands;
+                case Telegram.Bot.Types.Enums.UpdateType.Message:                    
                     var message = update.Message;
-                    foreach(Models.Commands.CommandDefault comd in commands)
+                    if(Bot.BotState == State.Default)
                     {
-                        if (comd.Contains(message) && message.Date >= Bot.startTime)
+                        var commands = Bot.Commands;
+                        foreach(Models.Commands.CommandDefault comd in commands)
                         {
-                            await comd.Exec(message, client);
-                            break;
+                            if (comd.Contains(message) && message.Date >= Bot.startTime)
+                            {
+                                await comd.Exec(message, client);
+                                break;
+                            }
                         }
+                    }
+                    else if(Bot.BotState == State.AuthCodeWait)
+                    {
+                        //TODO: bot state 
                     }
                     break;
                 case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:

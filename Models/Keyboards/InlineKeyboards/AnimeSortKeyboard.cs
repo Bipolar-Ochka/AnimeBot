@@ -24,10 +24,10 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
             return new InlineKeyboardMarkup(keyb);
         }
 
-        public override Task Handler(string buttonData, Message mes, TelegramBotClient client)
+        public override Task Handler(Update upd, TelegramBotClient client)
         {
-            var butCommand = getButtonCommand(buttonData);
-            Task executableCommand = null;
+            //TODO: fill switch
+            var butCommand = getButtonCommand(upd.CallbackQuery.Data);
             switch (butCommand)
             {
                 case "Recently watching":
@@ -41,7 +41,6 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                 default:
                     break;
             }
-            return executableCommand;
         }
     }
 }
