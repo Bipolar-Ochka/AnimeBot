@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.UI.WebControls;
 using TelegaNewBot.Models;
+using TelegaNewBot.Models.Tasks.ShikimoriTasks;
 using Telegram.Bot.Types;
 
 namespace TelegaNewBot.Controllers
@@ -43,11 +44,25 @@ namespace TelegaNewBot.Controllers
                     }
                     else if(Bot.BotState == State.AuthCodeWait)
                     {
-                        //TODO: bot state 
+                        var task = new ShikimoriAuthentication();
+                        await task.GetTask(message, client);
+                        Bot.BotState = State.Default;
                     }
                     break;
                 case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
+                    if(update.Message is null)
+                    {
+                        break;
+                    }
                     var fromButtonData = update.CallbackQuery.Data;
+                    var keyb = Bot.Inlines;
+                    foreach (var k in keyb)
+                    {
+                        if (k.Value.Contains(fromButtonData))
+                        {
+                           await k.Value.Handler(update, client);
+                        }
+                    }
                     break;
             }
             return Ok();

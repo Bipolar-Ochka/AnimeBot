@@ -11,7 +11,7 @@ namespace TelegaNewBot.Models.Commands.ShikimoriCommands
 {
     public class ShikimoreAuthorizationCommand : CommandDefault
     {
-        public override string Name => @"/shiki";
+        public override string Name => @"/aue";
         private bool isRunning = false;
 
         public override Task Exec(Message mes, TelegramBotClient client)

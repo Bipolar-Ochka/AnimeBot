@@ -41,6 +41,7 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                 default:
                     break;
             }
+            return Task.CompletedTask;
         }
     }
 }

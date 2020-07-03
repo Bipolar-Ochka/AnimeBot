@@ -15,11 +15,16 @@ namespace TelegaNewBot.Models.Tasks.ShikimoriTasks
         {
             try
             {
+                if(mes.Text is null || mes.Text.Length != 43)
+                {
+                    await client.SendTextMessageAsync(mes.Chat.Id, $"Wrong code").ConfigureAwait(false);
+                    return;
+                }
                 var shikiClient = new ShikimoriClient();
                 var code = mes.Text;
                 await client.SendTextMessageAsync(mes.Chat.Id, $"<i>Authorizing with code :</i>{Environment.NewLine}<code>{code}</code>", parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
                 await shikiClient.ShikiLogin(code).ConfigureAwait(false);
-                await client.SendTextMessageAsync(mes.Chat.Id, $"Logged as {shikiClient.GetNickname()}", replyToMessageId: mes.MessageId).ConfigureAwait(false);
+                await client.SendTextMessageAsync(mes.Chat.Id, $"Logged as {shikiClient.GetNickname()}").ConfigureAwait(false);
                 Bot.animeAccounts[mes.From.Id] = shikiClient;
             }
             catch (Exception e)

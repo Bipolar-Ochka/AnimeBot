@@ -9,6 +9,12 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegaNewBot.Models.Keyboards
 {
+    internal enum KeyboardTarget
+    {
+        ShikiMenu,
+        AnimeSortMenu,
+        AnimeItemsMenu,
+    }
     internal abstract class InlineKeyboardDefault
     {
         public abstract string Name { get; }

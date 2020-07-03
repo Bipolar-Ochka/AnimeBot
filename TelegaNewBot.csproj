@@ -142,6 +142,7 @@
     <Compile Include="Models\Bot.cs" />
     <Compile Include="Models\Commands\BaseCommands\MenuCommand.cs" />
     <Compile Include="Models\Commands\BaseCommands\MultiHelloCommand.cs" />
+    <Compile Include="Models\Commands\BaseCommands\ShikimoriCommand.cs" />
     <Compile Include="Models\Commands\BaseCommands\TestCommand.cs" />
     <Compile Include="Models\Commands\ShikimoriCommands\OngoingAnimeCommand.cs" />
     <Compile Include="Models\Commands\BaseCommands\HelloCommand.cs" />
