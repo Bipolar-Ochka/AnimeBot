@@ -42,7 +42,14 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                         return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"Logged as {shikiClient.GetNickname()}", replyMarkup: this.GetKeyboard());
                     }                  
                 case "Anime":
-                    return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, "Anime", replyMarkup: Bot.Inlines[KeyboardTarget.AnimeSortMenu]?.GetKeyboard());
+                    if (Bot.animeAccounts.ContainsKey(upd.CallbackQuery.From.Id))
+                    {
+                        return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, "Anime", replyMarkup: Bot.Inlines[KeyboardTarget.AnimeSortMenu]?.GetKeyboard());
+                    }
+                    else
+                    {
+                        return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"You are not logged", replyMarkup: this.GetKeyboard());
+                    }
                 case "Return to menu":                    
                     return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, "main menu");
                 case "Logout":

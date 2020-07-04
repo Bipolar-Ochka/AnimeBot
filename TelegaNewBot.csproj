@@ -159,10 +159,13 @@
     <Compile Include="Models\Keyboards\ReplyKeyboards\MainMenuKeyboard.cs" />
     <Compile Include="Models\Keyboards\InlineKeyboards\ShikimoriKeyboard.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SortingList\AnimePage.cs" />
+    <Compile Include="Models\SortingList\Sorter.cs" />
     <Compile Include="Models\Tasks\IBotTask.cs" />
     <Compile Include="Models\Tasks\ShikimoriTasks\ShikimoriAuthentication.cs" />
     <Compile Include="Models\Tasks\ShikimoriTasks\ShikimoriFullAnimeList.cs" />
     <Compile Include="Models\Tasks\ShikimoriTasks\ShikimoriSpecialAnimeList.cs" />
+    <Compile Include="Models\UserAnimeList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

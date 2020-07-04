@@ -24,7 +24,7 @@ namespace TelegaNewBot.Models
         private static List<Commands.CommandDefault> commandDefaults;
         internal static Dictionary<KeyboardTarget, InlineKeyboardDefault> Inlines { get; private set; }
         internal static Dictionary<int, ShikimoriClient> animeAccounts = new Dictionary<int, ShikimoriClient>();
-        internal static List<SpecialUserAnimeRate> AnimeList = null;
+        internal static Dictionary<int, UserAnimeList> animeAccountsLists = new Dictionary<int, UserAnimeList>();
         internal static DateTime startTime;
         internal static State BotState;
 
