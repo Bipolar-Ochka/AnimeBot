@@ -35,28 +35,28 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                     if (!Bot.animeAccounts.TryGetValue(upd.CallbackQuery.From.Id,out shikiClient))
                     {
                         Bot.BotState = State.AuthCodeWait;
-                        return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, $"<a href=\"{CodeUrl}\">Перейдите по ссылке и отправьте в сообщении код авторизации</a>", parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
+                        return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"<a href=\"{CodeUrl}\">Перейдите по ссылке и отправьте в сообщении код авторизации</a>", parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
                     }
                     else
                     {
-                        return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, $"Logged as {shikiClient.GetNickname()}", replyMarkup: this.GetKeyboard());
+                        return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"Logged as {shikiClient.GetNickname()}", replyMarkup: this.GetKeyboard());
                     }                  
                 case "Anime":
-                    return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, "Anime", replyMarkup: Bot.Inlines[KeyboardTarget.AnimeSortMenu]?.GetKeyboard());
+                    return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, "Anime", replyMarkup: Bot.Inlines[KeyboardTarget.AnimeSortMenu]?.GetKeyboard());
                 case "Return to menu":                    
-                    return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, "main menu");
+                    return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, "main menu");
                 case "Logout":
                     if (Bot.animeAccounts.ContainsKey(upd.CallbackQuery.From.Id))
                     {
                         Bot.animeAccounts[upd.CallbackQuery.From.Id] = null;
-                        return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, $"Logged out", replyMarkup: this.GetKeyboard());
+                        return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"Logged out", replyMarkup: this.GetKeyboard());
                     }
                     else
                     {
-                        return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, $"You are not logged", replyMarkup: this.GetKeyboard());
+                        return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"You are not logged", replyMarkup: this.GetKeyboard());
                     }
                 default:
-                    return client.EditMessageTextAsync(upd.CallbackQuery.InlineMessageId, "wrong query at shikimoriKeyboard.cs");
+                    return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, "wrong query at shikimoriKeyboard.cs");
             }
         }
     }

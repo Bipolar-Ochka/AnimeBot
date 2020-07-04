@@ -9,6 +9,7 @@ using TelegaNewBot.Models.Tasks.ShikimoriTasks;
 using ShikiHuiki.UserClass;
 using TelegaNewBot.Models.Keyboards;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types.Enums;
 
 namespace TelegaNewBot.Models
 {
@@ -38,7 +39,7 @@ namespace TelegaNewBot.Models
             InitKeys();
             client = new TelegramBotClient(Settings.ApiKey);
             var hook = string.Format(Settings.Url, "bot/message/update");
-            await client.SetWebhookAsync(hook);
+            await client.SetWebhookAsync(hook, allowedUpdates: new UpdateType[0]);
             startTime = DateTime.Now;
             BotState = State.Default;
             return client;

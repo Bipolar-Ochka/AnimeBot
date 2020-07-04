@@ -9,7 +9,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
 {
-    public class AnimeItemKeyboard : InlineKeyboardDefault
+    internal class AnimeItemKeyboard : InlineKeyboardDefault
     {
         public override string Name => "AnimeList";
 

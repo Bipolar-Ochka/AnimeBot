@@ -22,10 +22,11 @@ namespace TelegaNewBot.Controllers
             return "ALL FINE";
         }
         [HttpPost]
-        public async Task<OkResult> MessageGet([FromBody] Update update)
+        public async Task<OkResult> MessageGet([FromBody]Update update)
         {
             if (update == null) return Ok();
             var client = await Bot.LoadClient();
+            //await client.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Type}");
             switch (update.Type)
             {
                 case Telegram.Bot.Types.Enums.UpdateType.Message:                    
@@ -50,11 +51,12 @@ namespace TelegaNewBot.Controllers
                     }
                     break;
                 case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
-                    if(update.Message is null)
+                    if(update.CallbackQuery.Message is null)
                     {
                         break;
                     }
                     var fromButtonData = update.CallbackQuery.Data;
+                    await client.EditMessageTextAsync(update.CallbackQuery.Message.Chat.Id,update.CallbackQuery.Message.MessageId, fromButtonData, replyMarkup: Bot.Inlines[Models.Keyboards.KeyboardTarget.ShikiMenu]?.GetKeyboard()).ConfigureAwait(false) ;
                     var keyb = Bot.Inlines;
                     foreach (var k in keyb)
                     {
@@ -63,6 +65,8 @@ namespace TelegaNewBot.Controllers
                            await k.Value.Handler(update, client);
                         }
                     }
+                    break;
+                default:
                     break;
             }
             return Ok();
