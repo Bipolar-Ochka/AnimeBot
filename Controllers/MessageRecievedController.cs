@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -27,6 +28,7 @@ namespace TelegaNewBot.Controllers
             if (update == null) return Ok();
             var client = await Bot.LoadClient();
             //await client.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Type}");
+            if (Bot.BotState == State.Processing) return Ok();
             switch (update.Type)
             {
                 case Telegram.Bot.Types.Enums.UpdateType.Message:                    
@@ -56,13 +58,22 @@ namespace TelegaNewBot.Controllers
                         break;
                     }
                     var fromButtonData = update.CallbackQuery.Data;
-                    await client.EditMessageTextAsync(update.CallbackQuery.Message.Chat.Id,update.CallbackQuery.Message.MessageId, fromButtonData, replyMarkup: Bot.Inlines[Models.Keyboards.KeyboardTarget.ShikiMenu]?.GetKeyboard()).ConfigureAwait(false) ;
                     var keyb = Bot.Inlines;
                     foreach (var k in keyb)
                     {
                         if (k.Value.Contains(fromButtonData))
                         {
-                           await k.Value.Handler(update, client);
+                            try
+                            {
+                                await k.Value.Handler(update, client);
+
+                            }
+                            catch (Exception e)
+                            {
+                                Trace.WriteLine(e.Message);
+                                Trace.WriteLine(e.StackTrace);
+                                throw;
+                            }
                         }
                     }
                     break;

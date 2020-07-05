@@ -91,23 +91,29 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
 
         public override Task Handler(Update upd, TelegramBotClient client)
         {
-            //TODO: fill handler
             var command = getButtonCommand(upd.CallbackQuery.Data);
             var animeId = 0;
+            var mesId = upd.CallbackQuery.Message.MessageId;
+            var chatId = upd.CallbackQuery.Message.Chat.Id;
+            var userId = upd.CallbackQuery.From.Id;
+            var anime = Bot.GetUserAnime(userId);
             if(int.TryParse(command,out animeId))
             {
-
+                var kek = anime.AnimeList.Where(item => item.AnimeId == animeId).FirstOrDefault();
+                return client.EditMessageTextAsync(chatId, mesId, Sorter.GetAnimeMessage(kek) ?? $"no anime id={animeId}", replyMarkup:Bot.GetKeyboard(KeyboardTarget.AnimeTitle)?.GetKeyboard(),parseMode:Telegram.Bot.Types.Enums.ParseMode.Html);
             }
             else
             {
                 switch (command)
                 {
                     case "Prev":
-                        break;
+                        return client.EditMessageTextAsync(chatId, mesId, $"{anime.Page?.CurrentPage-1 ?? 0}/{anime.Page?.LimitPage ?? 0}",replyMarkup: this.GetKeyboard(anime.Page,MovePage.Prev));
                     case "Next":
-                        break;
+                        return client.EditMessageTextAsync(chatId, mesId, $"{anime.Page?.CurrentPage +1 ?? 0}/{anime.Page?.LimitPage ?? 0}", replyMarkup: this.GetKeyboard(anime.Page, MovePage.Next));
                     case "Menu":
-                        break;
+                        return client.EditMessageTextAsync(chatId, mesId, "Shikimori",replyMarkup:Bot.GetKeyboard(KeyboardTarget.ShikiMenu)?.GetKeyboard());
+                    default:
+                        return client.EditMessageTextAsync(chatId, mesId, "Shikimori", replyMarkup: Bot.GetKeyboard(KeyboardTarget.ShikiMenu)?.GetKeyboard());
                 }
             }
         }

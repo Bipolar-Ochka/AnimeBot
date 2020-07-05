@@ -10,13 +10,15 @@ using ShikiHuiki.UserClass;
 using TelegaNewBot.Models.Keyboards;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.Enums;
+using TelegaNewBot.Models.SortingList;
 
 namespace TelegaNewBot.Models
 {
     enum State
     {
         Default,
-        AuthCodeWait
+        AuthCodeWait,
+        Processing
     }
     public static class Bot
     {
@@ -45,6 +47,25 @@ namespace TelegaNewBot.Models
             return client;
         }
 
+        internal static AnimePage GetAnimePage(int userId)
+        {
+            return (animeAccountsLists.ContainsKey(userId)) ? animeAccountsLists[userId].Page : null;
+        }
+
+        internal static ShikimoriClient GetShikimoriClient(int userId)
+        {
+            return (animeAccounts.ContainsKey(userId)) ? animeAccounts[userId] : null;
+        }
+
+        internal static UserAnimeList GetUserAnime(int userId)
+        {
+            return (animeAccountsLists.ContainsKey(userId)) ? animeAccountsLists[userId] : null;
+        }
+
+        internal static InlineKeyboardDefault GetKeyboard(KeyboardTarget type)
+        {
+            return (Inlines.ContainsKey(type)) ? Inlines[type] : null;
+        }
         private static void InitKeys()
         {
             if(Inlines == null)
@@ -53,6 +74,8 @@ namespace TelegaNewBot.Models
                 {
                     { KeyboardTarget.ShikiMenu, new Keyboards.InlineKeyboards.ShikimoriKeyboard() },
                     {KeyboardTarget.AnimeSortMenu, new Keyboards.InlineKeyboards.AnimeSortKeyboard() },
+                    {KeyboardTarget.AnimeItemsMenu, new Keyboards.InlineKeyboards.AnimeEntriesListKeyboard() },
+                    {KeyboardTarget.AnimeTitle, new Keyboards.InlineKeyboards.AnimeItemKeyboard() },
                 };
                 
             }

@@ -14,6 +14,7 @@ namespace TelegaNewBot.Models.Keyboards
         ShikiMenu,
         AnimeSortMenu,
         AnimeItemsMenu,
+        AnimeTitle,
     }
     internal abstract class InlineKeyboardDefault
     {

@@ -28,5 +28,11 @@ namespace TelegaNewBot.Models.SortingList
                     return list;
             }
         }
+
+        public static string GetAnimeMessage(SpecialUserAnimeRate anime)
+        {
+            if (anime is null) return null;
+            return $"<a href=\"https://shikimori.one/{anime.AnimeInfo?.Image?.Preview}\">.</a><b><i>{anime.AnimeInfo?.NameRus}</i></b>{Environment.NewLine}Просмотрено {anime.EpisodesWatched} из {anime.AnimeInfo?.EpisodesAired}";
+        }
     }
 }
