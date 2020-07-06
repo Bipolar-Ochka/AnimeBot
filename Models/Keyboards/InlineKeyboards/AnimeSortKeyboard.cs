@@ -50,60 +50,37 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
             switch (butCommand)
             {
                 case "Recently watching":
-                    return getMessage(upd, client, upd.CallbackQuery.From.Id, shikiClient, DefaultStatus, SortType.Recently, false);
                 case "Close to finish":
-                    return getMessage(upd, client, upd.CallbackQuery.From.Id, shikiClient, DefaultStatus, SortType.Close, false);
                 case "Alphabetically":
-                    return getMessage(upd, client, upd.CallbackQuery.From.Id, shikiClient, DefaultStatus, SortType.Alphabet, false);
                 case "Refresh":
+                    return soloMethod(upd, client, shikiClient, DefaultStatus);
                 default:
                     break;
             }
             return Task.CompletedTask;
-        }
-        private async Task setList(int userId, ShikimoriClient client, AnimeStatus status, bool isNeedUpdate = false)
+        }   
+        private async Task soloMethod(Update upd, TelegramBotClient client,ShikimoriClient shikiClient, AnimeStatus status)
         {
-            if (Bot.animeAccountsLists.ContainsKey(userId))
-            {
-                if(DateTime.Now >= Bot.animeAccountsLists[userId].UpdatedAt.AddMinutes(10) || isNeedUpdate)
-                {
-                    var bag = await ShikimoriSpecialAnimeList.GetTaskBag(client, status).ConfigureAwait(false);
-                    Trace.WriteLine("bag success");
-                    Bot.animeAccountsLists[userId] = new UserAnimeList(bag.ToList(), DateTime.Now);
-                    Trace.WriteLine("dict success");
-                }
-            }
-            else
-            {
-                var bag = await ShikimoriSpecialAnimeList.GetTaskBag(client, status).ConfigureAwait(false);
-                Trace.WriteLine($"bag success {new StackTrace().FrameCount}");
-                Bot.animeAccountsLists[userId] = new UserAnimeList(bag.ToList(), DateTime.Now);
-                Trace.WriteLine("dict success");
-            }
-        }
-
-        private void sortList(int userId,SortType type)
-        {
-            if (Bot.animeAccountsLists.ContainsKey(userId))
-            {
-                Bot.animeAccountsLists[userId].AnimeList = Bot.animeAccountsLists[userId].AnimeList.SortAnime(type);
-            }
-        }
-
-        private async Task getMessage(Update upd, TelegramBotClient telega, int userId, ShikimoriClient client, AnimeStatus status, SortType type, bool isNeedUpdate = false)
-        {
-            await setList(userId, client, status, isNeedUpdate).ConfigureAwait(false);
-            Trace.WriteLine("setList passed");
-            sortList(userId, type);
-            Trace.WriteLine("sortList passed");
+            var userId = upd.CallbackQuery.From.Id;
             var mesId = upd.CallbackQuery.Message.MessageId;
             var chatId = upd.CallbackQuery.Message.Chat.Id;
-            var keyb = Bot.GetKeyboard(KeyboardTarget.AnimeItemsMenu) as AnimeEntriesListKeyboard;
-            Trace.WriteLine("keyb passed");
+            if(Bot.GetUserAnime(userId) is null)
+            {
+                await Task.Yield();
+                var bag = await shikiClient.V2AnimeReturn(status).ConfigureAwait(false);
+                await Task.Yield();
+                Trace.WriteLine($"var bag {bag.Count} \n {Environment.StackTrace}");
+                var lst = new UserAnimeList(bag.ToList(), DateTime.Now, userId);
+                Trace.WriteLine($"lst {lst.UpdatedAt}");
+                Bot.animeAccountsLists[userId] = new UserAnimeList(bag.ToList(), DateTime.Now, userId);
+                Trace.WriteLine("dict");
+            }
             var page = Bot.GetAnimePage(userId);
-            Trace.WriteLine("page passed");
-            await telega.EditMessageTextAsync(chatId, mesId, "Animes", replyMarkup:keyb.GetKeyboard(page,MovePage.Current));
-            Bot.BotState = State.Default;
+            var keyb = Bot.GetKeyboard(KeyboardTarget.AnimeItemsMenu) as AnimeEntriesListKeyboard;
+            var markup = await keyb.GetKeyboard(page, MovePage.Current).ConfigureAwait(false);
+            Trace.WriteLine("markup");
+            await client.EditMessageTextAsync(chatId,mesId,"Anime",replyMarkup:markup).ConfigureAwait(false);
+            Trace.WriteLine("edit mes");
         }
     }
 }

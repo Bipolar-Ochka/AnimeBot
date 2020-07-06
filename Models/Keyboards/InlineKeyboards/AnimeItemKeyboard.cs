@@ -28,12 +28,17 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                 case "+1":
                     return Task.CompletedTask;
                 case "Back":
-                    var page = Bot.GetAnimePage(upd.CallbackQuery.From.Id);
-                    var keyb = Bot.GetKeyboard(KeyboardTarget.AnimeItemsMenu) as AnimeEntriesListKeyboard;
-                    return client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"{page?.CurrentPage ?? 0}/{page?.LimitPage ?? 0}", replyMarkup:keyb?.GetKeyboard(page,SortingList.MovePage.Current));
+                    return editMessage(upd, client);
                 default:
                     return Task.CompletedTask;
             }
+        }
+        private async Task editMessage(Update upd,TelegramBotClient client)
+        {
+            var page = Bot.GetAnimePage(upd.CallbackQuery.From.Id);
+            var keyb = Bot.GetKeyboard(KeyboardTarget.AnimeItemsMenu) as AnimeEntriesListKeyboard;
+            var mark = await keyb.GetKeyboard(page, SortingList.MovePage.Current).ConfigureAwait(false);
+            await client.EditMessageTextAsync(upd.CallbackQuery.Message.Chat.Id, upd.CallbackQuery.Message.MessageId, $"{page?.CurrentPage ?? 0}/{page?.LimitPage ?? 0}", replyMarkup:mark).ConfigureAwait(false);
         }
     }
 }

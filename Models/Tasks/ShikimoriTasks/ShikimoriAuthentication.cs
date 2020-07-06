@@ -24,7 +24,7 @@ namespace TelegaNewBot.Models.Tasks.ShikimoriTasks
                 var code = mes.Text;
                 await client.SendTextMessageAsync(mes.Chat.Id, $"<i>Authorizing with code :</i>{Environment.NewLine}<code>{code}</code>", parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
                 await shikiClient.ShikiLogin(code).ConfigureAwait(false);
-                await client.SendTextMessageAsync(mes.Chat.Id, $"Logged as {shikiClient.GetNickname()}").ConfigureAwait(false);
+                await client.SendTextMessageAsync(mes.Chat.Id, $"Logged as {shikiClient.GetNickname()}",replyMarkup:Bot.GetKeyboard(Keyboards.KeyboardTarget.ShikiMenu)?.GetKeyboard()).ConfigureAwait(false);
                 Bot.animeAccounts[mes.From.Id] = shikiClient;
             }
             catch (Exception e)

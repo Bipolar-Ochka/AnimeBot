@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
             var keyb = new List<List<InlineKeyboardButton>>() { rowLast };
             return new InlineKeyboardMarkup(keyb);
         }
-        public InlineKeyboardMarkup GetKeyboard(AnimePage page, MovePage move)
+        public async Task<InlineKeyboardMarkup> GetKeyboard(AnimePage page, MovePage move)
         {
             bool isLastPage = page.CurrentPage == page.LimitPage;
             bool isFirstPage = page.CurrentPage == 1;
@@ -52,7 +53,7 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                              GetButton("Prev"), GetButton("Menu"), GetButton("Next")
                         };
                     }
-                    break;
+                    return await page.getCurrentPage(menu).ConfigureAwait(false);
                 case MovePage.Next:
                     if (isNextLastPage)
                     {
@@ -68,7 +69,7 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                              GetButton("Prev"), GetButton("Menu"), GetButton("Next")
                         };
                     }
-                    break;
+                    return await page.getNextPage(menu).ConfigureAwait(false);
                 case MovePage.Prev:
                     if (isPrevLastPage)
                     {
@@ -84,9 +85,10 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
                              GetButton("Prev"), GetButton("Menu"), GetButton("Next")
                         };
                     }
-                    break;
+                    return await page.getPrevPage(menu).ConfigureAwait(false);
+                default:
+                    return null;
             }
-            return page.getPrevPage(menu);
         }
 
         public override Task Handler(Update upd, TelegramBotClient client)
@@ -104,17 +106,27 @@ namespace TelegaNewBot.Models.Keyboards.InlineKeyboards
             }
             else
             {
-                switch (command)
-                {
-                    case "Prev":
-                        return client.EditMessageTextAsync(chatId, mesId, $"{anime.Page?.CurrentPage-1 ?? 0}/{anime.Page?.LimitPage ?? 0}",replyMarkup: this.GetKeyboard(anime.Page,MovePage.Prev));
-                    case "Next":
-                        return client.EditMessageTextAsync(chatId, mesId, $"{anime.Page?.CurrentPage +1 ?? 0}/{anime.Page?.LimitPage ?? 0}", replyMarkup: this.GetKeyboard(anime.Page, MovePage.Next));
-                    case "Menu":
-                        return client.EditMessageTextAsync(chatId, mesId, "Shikimori",replyMarkup:Bot.GetKeyboard(KeyboardTarget.ShikiMenu)?.GetKeyboard());
-                    default:
-                        return client.EditMessageTextAsync(chatId, mesId, "Shikimori", replyMarkup: Bot.GetKeyboard(KeyboardTarget.ShikiMenu)?.GetKeyboard());
-                }
+                return editMessage(client, command, chatId, mesId, anime);
+            }
+        }
+        private async Task editMessage(TelegramBotClient client, string command, long chatId, int mesId, UserAnimeList anime)
+        {
+            switch (command)
+            {
+                case "Prev":
+                    var keyb1 = await this.GetKeyboard(anime.Page, MovePage.Prev).ConfigureAwait(false);
+                    await client.EditMessageTextAsync(chatId, mesId, $"{anime.Page?.CurrentPage - 1 ?? 0}/{anime.Page?.LimitPage ?? 0}", replyMarkup: keyb1);
+                    break;
+                case "Next":
+                    var keyb2 = await this.GetKeyboard(anime.Page, MovePage.Next).ConfigureAwait(false);
+                    await client.EditMessageTextAsync(chatId, mesId, $"{anime.Page?.CurrentPage + 1 ?? 0}/{anime.Page?.LimitPage ?? 0}", replyMarkup: keyb2);
+                    break;
+                case "Menu":
+                    await client.EditMessageTextAsync(chatId, mesId, "Shikimori", replyMarkup: Bot.GetKeyboard(KeyboardTarget.ShikiMenu)?.GetKeyboard());
+                    break;
+                default:
+                    await client.EditMessageTextAsync(chatId, mesId, "Shikimori", replyMarkup: Bot.GetKeyboard(KeyboardTarget.ShikiMenu)?.GetKeyboard());
+                    break;
             }
         }
     }

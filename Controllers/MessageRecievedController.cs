@@ -44,6 +44,10 @@ namespace TelegaNewBot.Controllers
                                 break;
                             }
                         }
+                        if (update.Message.Text.Contains("/kek"))
+                        {
+                            await Bot.GetKeyboard(Models.Keyboards.KeyboardTarget.AnimeItemsMenu).Handler(update, client);
+                        }
                     }
                     else if(Bot.BotState == State.AuthCodeWait)
                     {
@@ -66,7 +70,7 @@ namespace TelegaNewBot.Controllers
                             try
                             {
                                 await k.Value.Handler(update, client);
-
+                                await Task.Yield();
                             }
                             catch (Exception e)
                             {
